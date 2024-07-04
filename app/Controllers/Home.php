@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\ProductModel;
+use App\Models\TransactionModel;
+use App\Models\TransactionDetailModel;
 
 class Home extends BaseController
 {
@@ -12,13 +14,16 @@ class Home extends BaseController
     {
         helper('form');
         helper('number');
-        $this->product = new ProductModel();        
+        $this->product = new ProductModel();  
+        $this->transaction = new TransactionModel();  
+        $this->transaction_detail = new TransactionDetailModel();    
     }
 
     public function index()
     {
         $product = $this->product->findAll();
         $data['product'] = $product;
+        //$data['transaction'] = $transaction;
 
         return view('v_home', $data);
     }
@@ -28,7 +33,7 @@ class Home extends BaseController
         $username = session()->get('username');
         $data['username'] = $username;
 
-        $buy = $this->transaction->where('username', $username)->findAll(); //error di bagian sini
+        $buy = $this->transaction->where('username', $username)->findAll(); 
         $data['buy'] = $buy;
 
         $product = [];
