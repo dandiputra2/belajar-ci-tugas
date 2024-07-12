@@ -24,6 +24,14 @@ class ProdukController extends BaseController
     }
         public function create()
     {
+        if ($this->request->getPost()) {
+            $rules = [
+                'nama' => 'required|min_length[6]',
+                'harga' => 'required|numeric',
+                'jumlah' => 'required|numeric',
+            ];
+
+            if ($this->validate($rules)) {
         $dataFoto = $this->request->getFile('foto');
 
         $dataForm = [
@@ -41,8 +49,15 @@ class ProdukController extends BaseController
 
         $this->product->insert($dataForm);
 
-        return redirect('produk')->with('success', 'Data Berhasil Ditambah');
-    } 
+                return redirect('produk')->with('success', 'Data Berhasil Ditambah');
+            } else {
+                session()->setFlashdata('failed', $this->validator->listErrors());
+                return redirect()->back();
+            }
+        }
+
+        return view('v_produk');
+    }
     public function edit($id)
     {
     $dataProduk = $this->product->find($id);
